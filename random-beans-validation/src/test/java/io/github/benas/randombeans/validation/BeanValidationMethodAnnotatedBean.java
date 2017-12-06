@@ -37,6 +37,8 @@ class BeanValidationMethodAnnotatedBean {
 
     private BigDecimal minDiscount;
 
+    private BigDecimal discount;
+
     private Date eventDate;
 
     private Date birthday;
@@ -83,6 +85,16 @@ class BeanValidationMethodAnnotatedBean {
     @DecimalMin("5.00")
     public BigDecimal getMinDiscount() {
         return minDiscount;
+    }
+
+    @DecimalMax("1.00")
+    @DecimalMin("0.01")
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 
     public void setMinDiscount(BigDecimal minDiscount) {

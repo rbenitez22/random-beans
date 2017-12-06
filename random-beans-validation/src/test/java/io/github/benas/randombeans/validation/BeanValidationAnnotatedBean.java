@@ -41,6 +41,10 @@ class BeanValidationAnnotatedBean {
     @DecimalMin("5.00")
     private BigDecimal minDiscount;
 
+    @DecimalMax("1.00")
+    @DecimalMin("0.01")
+    private BigDecimal discount;
+
     @Future
     private Date eventDate;
 
@@ -165,7 +169,15 @@ class BeanValidationAnnotatedBean {
 		this.regexString = regexString;
 	}
 
-	@Override
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BeanValidationAnnotatedBean{");
         sb.append("unsupported=").append(unsupported);
