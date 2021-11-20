@@ -59,6 +59,8 @@ public class EnhancedRandomBuilder {
 
     private final EnhancedRandomParameters parameters;
 
+    private final Map<Class<?>,Supplier<?>> instanceFactories;
+
     /**
      * Create a new {@link EnhancedRandomBuilder}.
      */
@@ -67,6 +69,7 @@ public class EnhancedRandomBuilder {
         exclusionRandomizerRegistry = new ExclusionRandomizerRegistry();
         userRegistries = new LinkedHashSet<>();
         parameters = new EnhancedRandomParameters();
+        instanceFactories = new HashMap<>();
     }
 
     /**
@@ -85,6 +88,11 @@ public class EnhancedRandomBuilder {
      */
     public static EnhancedRandom aNewEnhancedRandom() {
         return new EnhancedRandomBuilder().build();
+    }
+
+    public <T> EnhancedRandomBuilder registerInstanceFactory(Class<T> type, Supplier<T> factory){
+        instanceFactories.put(type,factory);
+        return this;
     }
 
     /**
@@ -436,6 +444,9 @@ public class EnhancedRandomBuilder {
     private EnhancedRandomImpl setupEnhancedRandom(LinkedHashSet<RandomizerRegistry> registries) {
         EnhancedRandomImpl enhancedRandom = new EnhancedRandomImpl(registries);
         enhancedRandom.setParameters(parameters);
+
+        instanceFactories.entrySet().forEach(e-> enhancedRandom.addInstanceFactory(e.getKey(),e.getValue()));
+
         return enhancedRandom;
     }
 

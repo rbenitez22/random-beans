@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static io.github.benas.randombeans.EnhancedRandomBuilder.aNewEnhancedRandom;
@@ -114,6 +115,7 @@ public abstract class EnhancedRandom extends Random {
         return randomListOf(amount, type, excludedFields);
     }
 
+
     /**
      * Generate a random instance of the given type.
      *
@@ -136,5 +138,7 @@ public abstract class EnhancedRandom extends Random {
      * @throws ObjectGenerationException when unable to populate an instance of the given type
      */
     public abstract <T> Stream<T> objects(final Class<T> type, final int amount, final String... excludedFields);
+
+    protected abstract <T> void addInstanceFactory(Class<? extends T> type, Supplier<? extends T> factory);
 
 }

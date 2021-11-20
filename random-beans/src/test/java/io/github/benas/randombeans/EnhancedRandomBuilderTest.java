@@ -31,6 +31,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -151,6 +155,69 @@ public class EnhancedRandomBuilderTest {
 
         assertThat(randomHuman.getName()).isNull();
         assertThat(randomHuman.getId()).isNull();
+    }
+
+    @Test public void testInstanceFactory(){
+
+        EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
+                .registerInstanceFactory(Person.class,Person::create)
+                .build();
+
+        Person person = enhancedRandom.nextObject(Person.class);
+
+        Assertions.assertNotNull(person);
+        Assertions.assertNotNull(person.getFirstName());
+        Assertions.assertNotNull(person.getLastName());
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private static class Person
+    {
+        @JsonProperty("firstName")
+        private String firstName;
+
+        @JsonProperty("lastName")
+        private String lastName;
+
+        Person()
+        {
+
+        }
+
+        public String getFirstName()
+        {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName)
+        {
+            this.firstName = firstName;
+        }
+
+        public String getLastName()
+        {
+            return lastName;
+        }
+
+        public void setLastName(String lastName)
+        {
+            this.lastName = lastName;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "Person{" +
+                    "firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    '}';
+        }
+
+        public static Person create()
+        {
+            return new Person();
+        }
+
     }
 
 }

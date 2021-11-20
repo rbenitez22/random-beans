@@ -30,9 +30,12 @@ import io.github.benas.randombeans.api.ObjectGenerationException;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.SynchronousQueue;
+import java.util.function.Supplier;
 
 import static io.github.benas.randombeans.util.CollectionUtils.randomElementOf;
 import static io.github.benas.randombeans.util.ReflectionUtils.getPublicConcreteSubTypesOf;
@@ -48,6 +51,7 @@ import static io.github.benas.randombeans.util.ReflectionUtils.isAbstract;
 class ObjectFactory {
 
     private final Objenesis objenesis = new ObjenesisStd();
+    private final Map<Class<?>,Supplier<?>> instanceFactories = new HashMap<>();
 
     private boolean scanClasspathForConcreteTypes;
 
@@ -110,5 +114,9 @@ class ObjectFactory {
             // DelayQueue is not supported since it requires creating dummy delayed objects
             throw new UnsupportedOperationException(DelayQueue.class.getName() + " type is not supported");
         }
+    }
+
+    protected <T> void addInstanceFactory(Class<?> type, Supplier<T> factory){
+        instanceFactories.put(type,factory);
     }
 }

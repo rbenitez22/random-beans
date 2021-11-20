@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static io.github.benas.randombeans.util.ReflectionUtils.*;
@@ -70,6 +71,11 @@ class EnhancedRandomImpl extends EnhancedRandom {
         enumRandomizersByType = new ConcurrentHashMap<>();
         fieldPopulator = new FieldPopulator(this, randomizerProvider, arrayPopulator, collectionPopulator, mapPopulator);
         fieldExclusionChecker = new FieldExclusionChecker();
+    }
+
+    @Override
+    protected <T> void addInstanceFactory(Class<? extends T> type, Supplier<? extends T> factory){
+        objectFactory.addInstanceFactory(type,factory);
     }
 
     @Override
